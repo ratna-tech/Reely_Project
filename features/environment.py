@@ -7,11 +7,14 @@ from selenium.webdriver.support.wait import WebDriverWait
 from app.application import Application
 
 def browser_init(context,scenario_name):
-
-    driver_path = ChromeDriverManager().install()
-    service = Service(driver_path)
-    context.driver = webdriver.Chrome(service=service)
-
+    mobile_emulation = {
+        "deviceMetrics": {"width": 360, "height": 640, "pixelRatio": 3.0},
+        "userAgent": "Mozilla/5.0 (Linux; Android 4.2.1; en-us; Nexus 5 Build/JOP40D) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166 Mobile Safari/535.19",
+        "clientHints": {"platform": "Android", "mobile": True}}
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_experimental_option("mobileEmulation", mobile_emulation)
+    service = Service(ChromeDriverManager().install())
+    context.driver = webdriver.Chrome(options=chrome_options,service=service)
 
 
 
@@ -63,5 +66,11 @@ def after_scenario(context, feature):
      }
     options.set_capability('bstack:options', bstack_options)
     context.driver = webdriver.Remote(command_executor=url, options=options)"""
+
+"""driver_path = ChromeDriverManager().install()
+    service = Service(driver_path)
+    context.driver = webdriver.Chrome(service=service)
+"""
+
 ### BROWSERSTACK ###
 # Register for BrowserStack, then grab it from https://www.browserstack.com/accounts/settings
